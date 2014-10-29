@@ -81,4 +81,3 @@
                    '(height . 50))
                   initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
-

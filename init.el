@@ -23,13 +23,17 @@
     recentf-ext
     magit
     helm
+    helm-projectile
     auto-complete
     flycheck
+    web-mode
+    bind-key
     markdown-mode
     multiple-cursors
     zenburn-theme
     expand-region
     open-junk-file
+    anzu
     scss-mode
     google-c-style
     yaml-mode
