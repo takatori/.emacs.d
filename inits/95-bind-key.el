@@ -13,6 +13,12 @@
 ;; 行番号を指定して移動する機能をM-zに割り当て
 (bind-key "M-z" 'goto-line)
 
+;; コピーをC-lに割り当て
+(bind-key "C-l" 'kill-ring-save)
+
+;; コメントアウトをC-;に割り当て
+(bind-key "C-;" 'one-line-comment)
+
 ;; ESC 連打で無効化
 (bind-key "M-ESC ESC" 'keyboard-quit)
 
@@ -20,9 +26,9 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-;; expand-region
-(bind-key "C-," 'er/expand-region)
-(bind-key "C-M-," 'er/contract-region)
+;; expand-region                           
+(bind-key "C-," 'er/expand-region)      
+(bind-key "C-M-," 'er/contract-region)  
 
 ;; multiple-cursors
 (bind-key "<C-M-return>" 'mc/edit-lines)

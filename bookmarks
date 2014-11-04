@@ -2,7 +2,17 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("memo.txt"
+(("key-bind"
+ (filename . "~/.emacs.d/inits/95-bind-key.el")
+ (front-context-string . "(require 'bind-k")
+ (rear-context-string)
+ (position . 1))
+("emacs_info.txt"
+ (filename . "c:/share/Mac/Documents/memo/emacs/emacs_info.txt")
+ (front-context-string . "\nファンクションキー1	<f1>")
+ (rear-context-string . "		SPC\nエスケープ		ESC")
+ (position . 172))
+("memo.txt"
  (filename . "c:/Users/takatori/Documents/memo/memo.txt")
  (front-context-string . "拡張子とそれを開くアプリケーショ")
  (rear-context-string . "t Menu\n\n|* ファイルの")
