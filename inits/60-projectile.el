@@ -1,0 +1,4 @@
+(projectile-global-mode)
+
+
+
