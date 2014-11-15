@@ -2,7 +2,7 @@
 
 ;; window の移動
 (bind-key* "C-t" 'other-window-or-split)
-(bind-key "C-S-t" 'previous-multiframew-window)
+(bind-key "C-S-t" 'delete-window)
 
 ;; recentf
 (bind-key "C-x C-r" 'recentf-open-files)

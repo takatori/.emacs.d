@@ -25,15 +25,19 @@
     helm
     helm-projectile
     auto-complete
+    auto-save-buffers-enhanced
     flycheck
     web-mode
     bind-key
+    projectile
+    volatile-highlights
     markdown-mode
     multiple-cursors
     zenburn-theme
     expand-region
     open-junk-file
     anzu
+    yascroll
     scss-mode
     google-c-style
     yaml-mode

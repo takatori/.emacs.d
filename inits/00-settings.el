@@ -63,9 +63,10 @@
 ;; ウィンドウを左右に分割したときに行を折り返さない
 (setq-default truncate-partial-width-windows t)
 
-;; ツールバーを非表示 メニューバーを非表示
+;; ツールバーを非表示 メニューバーを非表示 スクロールバーを非表示
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+(scroll-bar-mode -1)
 
 ;;;現在行に色を付ける
 (global-hl-line-mode 1)
