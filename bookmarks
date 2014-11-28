@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("key-bind"
+(("Desktop"
+ (filename . "c:/Users/takatori/Desktop/")
+ (front-context-string . "201400_sharp_big")
+ (rear-context-string . "192 11-20 09:11 ")
+ (position . 253))
+("key-bind"
  (filename . "~/.emacs.d/inits/95-bind-key.el")
  (front-context-string . "(require 'bind-k")
  (rear-context-string)
