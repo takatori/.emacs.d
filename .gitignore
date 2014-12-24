@@ -13,3 +13,10 @@ eshell/lastdir
 
 #
 server/
+
+
+# etc
+ac-comphist.dat
+bookmarks
+tramp
+projectile*
