@@ -1,0 +1,15 @@
+#
+ac-dict/
+
+#
+backup/
+
+#外部パッケージは管理外とする
+elpa/
+
+#
+eshell/history
+eshell/lastdir
+
+#
+server/
