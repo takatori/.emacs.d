@@ -13,8 +13,8 @@
 
 ;; 改行コードを表示
 (setq eol-mnemonic-dos "(CRLF)")
-(setq eol-mnemonic-mac "(CR)")
-(setq eol-mnemonic-unix "(LF)")
+;;(setq eol-mnemonic-mac "(CR)")
+;;(setq eol-mnemonic-unix "(LF)")
 
 ;; インデントをスペースに
 (defun my-c-mode-hook ()
@@ -82,3 +82,5 @@
                    '(height . 50))
                   initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
+
+

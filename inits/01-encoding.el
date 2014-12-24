@@ -2,3 +2,5 @@
 (set-default-coding-systems 'utf-8-dos)
 ;; パスとファイル名はShift_JIS dired用
 (setq default-file-name-coding-system 'shift_jis)
+
+
