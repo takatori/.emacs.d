@@ -4,8 +4,6 @@
 (bind-key* "C-t" 'other-window-or-split)
 (bind-key "C-S-t" 'delete-window)
 
-;; recentf
-(bind-key "C-x C-r" 'recentf-open-files)
 
 ;; C-hをBackSpaceに
 (bind-key "C-h" 'backward-delete-char)
@@ -36,7 +34,6 @@
     global-map "C-." '(("C-n" . 'mc/mark-next-like-this)
                        ("C-p" . 'mc/mark-previous-like-this)
                        ("*"   . 'mc/mark-all-like-this)))
-
 ;; open-junk
 (bind-key "C-x j" 'open-junk-file)
 
@@ -46,6 +43,15 @@
 
 ;; C-x C-b をつぶす
 ;;(bind-key (kbd "C-x C-b") 'buffer-menu)
+
+;; Helm
+;; recentf
+(bind-key "C-x C-r" 'helm-recentf)
+
+;; show-kill-ring
+(bind-key "M-y" 'helm-show-kill-ring)
+
+
 
 
 ;; dash (cocoa-emacs only)
