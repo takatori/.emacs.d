@@ -37,6 +37,11 @@
 ;; open-junk
 (bind-key "C-x j" 'open-junk-file)
 
+;; dash (cocoa-emacs only)
+(bind-key "C-c d" 'dash-at-point)
+(bind-key "C-c e" 'dash-at-point-with-docset)
+
+
 ;; Google Translate
 ;;(bind-key (kbd "C-x t") 'google-translate-at-point)
 ;;(bind-key (kbd "C-x T") 'google-translate-query-translate)
@@ -51,11 +56,11 @@
 ;; show-kill-ring
 (bind-key "M-y" 'helm-show-kill-ring)
 
+;; helm-projectile
+(bind-key "C-x g" 'helm-projectile)
 
 
 
-;; dash (cocoa-emacs only)
-(bind-key "C-c d" 'dash-at-point)
-(bind-key "C-c e" 'dash-at-point-with-docset)
+
 
 
