@@ -14,7 +14,9 @@
 ;; -----------------------------------------------------------------------------
 ;; パッケージ自動インストール設定
 
-(require 'cl-lib)
+(eval-when-compile
+  (require 'cl))
+
 
 (defvar installing-package-list
   '(
