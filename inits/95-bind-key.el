@@ -1,9 +1,12 @@
+;; define-keyを使いやすくする
+;; 参考: http://rubikitch.com/tag/emacs-bind-key-%E4%BD%BF%E3%81%84%E6%96%B9/
+;; 割り当てたキーバインドは
+;; M-x describe-personal-keybindingsで表示
 (require 'bind-key)
 
 ;; window の移動
 (bind-key* "C-t" 'other-window-or-split)
 (bind-key "C-S-t" 'delete-window)
-
 
 ;; C-hをBackSpaceに
 (bind-key "C-h" 'backward-delete-char)
@@ -43,21 +46,17 @@
 
 
 ;; Google Translate
-;;(bind-key (kbd "C-x t") 'google-translate-at-point)
-;;(bind-key (kbd "C-x T") 'google-translate-query-translate)
+(bind-key "C-x t" 'google-translate-at-point)
+(bind-key "C-x T" 'google-translate-query-translate)
 
-;; C-x C-b をつぶす
-;;(bind-key (kbd "C-x C-b") 'buffer-menu)
 
-;; Helm
-;; recentf
+;;;;;;;;;;;;;;;;;;;  Helm ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (bind-key "C-x C-r" 'helm-recentf)
+(bind-key "M-y" 'helm-show-kill-ring) ;; show-kill-ring
+(bind-key "C-x g" 'helm-projectile) ;; helm-projectile
 
-;; show-kill-ring
-(bind-key "M-y" 'helm-show-kill-ring)
 
-;; helm-projectile
-(bind-key "C-x g" 'helm-projectile)
+
 
 
 
