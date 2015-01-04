@@ -51,11 +51,9 @@
 
 
 ;;;;;;;;;;;;;;;;;;;  Helm ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(bind-key "C-x C-r" 'helm-recentf)
+(bind-key* "C-x C-r" 'helm-recentf)
 (bind-key "M-y" 'helm-show-kill-ring) ;; show-kill-ring
-(bind-key "C-x g" 'helm-projectile) ;; helm-projectile
-
-
+(bind-key "C-x p" 'helm-projectile) ;; helm-projectile
 
 
 
