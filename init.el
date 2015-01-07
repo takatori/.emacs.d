@@ -38,7 +38,6 @@
     multiple-cursors
     zenburn-theme
     expand-region
-    open-junk-file
     anzu
     yascroll
     scss-mode
