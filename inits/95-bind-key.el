@@ -37,8 +37,7 @@
     global-map "C-." '(("C-n" . 'mc/mark-next-like-this)
                        ("C-p" . 'mc/mark-previous-like-this)
                        ("*"   . 'mc/mark-all-like-this)))
-;; open-junk
-(bind-key "C-x j" 'open-junk-file)
+
 
 ;; dash (cocoa-emacs only)
 (bind-key "C-c d" 'dash-at-point)
