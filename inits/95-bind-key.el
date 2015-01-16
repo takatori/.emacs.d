@@ -20,9 +20,6 @@
 ;; コメントアウトをC-;に割り当て
 (bind-key "C-;" 'one-line-comment)
 
-;; バッファ更新をC-.に割り当て
-(bind-key "C-." 'revert-buffer)
-
 ;; ESC 連打で無効化
 (bind-key "M-ESC ESC" 'keyboard-quit)
 
@@ -40,8 +37,9 @@
 
 ;;;;;;;;;;;;;;;;;;;  Helm ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (bind-key* "C-x C-r" 'helm-recentf)
-(bind-key "M-y" 'helm-show-kill-ring) ;; show-kill-ring
 (bind-key* "C-x p" 'helm-projectile) ;; helm-projectile
+(bind-key "M-y" 'helm-show-kill-ring) ;; show-kill-ring
+
 
 
 
