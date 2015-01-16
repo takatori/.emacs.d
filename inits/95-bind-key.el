@@ -31,9 +31,6 @@
 (bind-key "C-," 'er/expand-region)      
 (bind-key "C-M-," 'er/contract-region)  
 
-;; dash (cocoa-emacs only)
-(bind-key "C-c d" 'dash-at-point)
-(bind-key "C-c e" 'dash-at-point-with-docset)
 
 ;;;;;;;;;;;;;;;;;;;  Helm ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (bind-key* "C-x C-r" 'helm-recentf)
@@ -41,6 +38,9 @@
 (bind-key "M-y" 'helm-show-kill-ring) ;; show-kill-ring
 
 
+;; dash (cocoa-emacs only)
+(bind-key "C-c d" 'dash-at-point)
+(bind-key "C-c e" 'dash-at-point-with-docset)
 
 
 
