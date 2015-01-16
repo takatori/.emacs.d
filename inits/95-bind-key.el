@@ -20,6 +20,9 @@
 ;; コメントアウトをC-;に割り当て
 (bind-key "C-;" 'one-line-comment)
 
+;; バッファ更新をC-.に割り当て
+(bind-key "C-." 'revert-buffer)
+
 ;; ESC 連打で無効化
 (bind-key "M-ESC ESC" 'keyboard-quit)
 
@@ -31,23 +34,9 @@
 (bind-key "C-," 'er/expand-region)      
 (bind-key "C-M-," 'er/contract-region)  
 
-;; multiple-cursors
-(bind-key "<C-M-return>" 'mc/edit-lines)
-(smartrep-define-key
-    global-map "C-." '(("C-n" . 'mc/mark-next-like-this)
-                       ("C-p" . 'mc/mark-previous-like-this)
-                       ("*"   . 'mc/mark-all-like-this)))
-
-
 ;; dash (cocoa-emacs only)
 (bind-key "C-c d" 'dash-at-point)
 (bind-key "C-c e" 'dash-at-point-with-docset)
-
-
-;; Google Translate
-(bind-key "C-x t" 'google-translate-at-point)
-(bind-key "C-x T" 'google-translate-query-translate)
-
 
 ;;;;;;;;;;;;;;;;;;;  Helm ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (bind-key* "C-x C-r" 'helm-recentf)
