@@ -31,6 +31,9 @@
 (bind-key "C-," 'er/expand-region)      
 (bind-key "C-M-," 'er/contract-region)  
 
+;; magit-status
+(bind-key* "C-x m" 'magit-status)
+
 
 ;;;;;;;;;;;;;;;;;;;  Helm ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (bind-key* "C-x C-r" 'helm-recentf)
