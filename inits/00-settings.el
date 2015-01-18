@@ -12,9 +12,9 @@
 (setq comment-style 'multi-line)
 
 ;; 改行コードを表示
-(setq eol-mnemonic-dos "(CRLF)")
+;;(setq eol-mnemonic-dos "(CRLF)")
 ;;(setq eol-mnemonic-mac "(CR)")
-;;(setq eol-mnemonic-unix "(LF)")
+(setq eol-mnemonic-unix "(LF)")
 
 ;; インデントをスペースに
 (defun my-c-mode-hook ()
@@ -26,6 +26,9 @@
 ;; 対応する括弧をハイライト
 (setq show-paren-delay 0)
 (show-paren-mode t)
+
+;; 閉じ括弧自動挿入
+(electric-pair-mode 1)
 
 ;; 編集時 buffer 再読み込み
 (global-auto-revert-mode 1)
