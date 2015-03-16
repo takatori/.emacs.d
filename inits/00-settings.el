@@ -27,6 +27,9 @@
 (setq show-paren-delay 0)
 (show-paren-mode t)
 
+;; 行数表示
+(global-linum-mode t)
+
 ;; 閉じ括弧自動挿入
 (electric-pair-mode 1)
 
