@@ -89,4 +89,7 @@
                   initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
 
-
+;; for mac
+;; meta-keyをcommadに割り当て
+(when (eq system-type 'darwin)
+  (setq ns-command-modifier (quote meta)))
