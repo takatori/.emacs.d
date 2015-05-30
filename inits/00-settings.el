@@ -11,6 +11,10 @@
 ;; コメントアウトの形式変更
 (setq comment-style 'multi-line)
 
+;; ￥をバックスラッシュと交換
+;; 165が¥（円マーク） , 92が\（バックスラッシュ）を表す
+(define-key global-map [165] [92])
+
 ;; 改行コードを表示
 ;;(setq eol-mnemonic-dos "(CRLF)")
 ;;(setq eol-mnemonic-mac "(CR)")
