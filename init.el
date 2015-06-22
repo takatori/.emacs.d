@@ -32,6 +32,7 @@
     web-mode
     bind-key
     js2-mode
+    coffee-mode
     projectile
     volatile-highlights
     markdown-mode
