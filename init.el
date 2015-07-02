@@ -46,6 +46,7 @@
     yaml-mode
     open-junk-file
     arduino-mode
+    ess
     ))
 
 (let ((not-installed (loop for x in installing-package-list
