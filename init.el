@@ -45,6 +45,7 @@
     google-c-style
     yaml-mode
     open-junk-file
+    arduino-mode
     ))
 
 (let ((not-installed (loop for x in installing-package-list
