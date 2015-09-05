@@ -46,6 +46,7 @@
     yaml-mode
     open-junk-file
     arduino-mode
+    scala-mode2
     ))
 
 (let ((not-installed (loop for x in installing-package-list
