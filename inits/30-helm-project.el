@@ -23,6 +23,9 @@
     ,(if (projectile-project-p)
      helm-source-projectile-files-list)))
 
+;; C-c p pでprojectを移動した時のデフォルトアクションをdiredに変更
+(setq projectile-switch-project-action 'projectile-dired)
+
 ;; helm-agをプロジェクトルートから
 (defun projectile-helm-ag ()
   (interactive)
