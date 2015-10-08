@@ -39,7 +39,8 @@
 (bind-key* "C-x C-r" 'helm-recentf)
 (bind-key* "C-x p" 'helm-projectile) ;; helm-projectile
 (bind-key "M-y" 'helm-show-kill-ring) ;; show-kill-ring
-
+(bind-key* "M-s" 'helm-ag) ;;helm-ag
+(bind-key* "M-r" 'helm-ag-this-file)
 
 ;; dash (cocoa-emacs only)
 (bind-key "C-c d" 'dash-at-point)

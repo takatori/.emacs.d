@@ -26,6 +26,7 @@
     magit
     helm
     helm-projectile
+    helm-ag
     auto-complete
     auto-save-buffers-enhanced
     flycheck
@@ -47,6 +48,8 @@
     open-junk-file
     arduino-mode
     scala-mode2
+    ensime
+    exec-path-from-shell
     ))
 
 (let ((not-installed (loop for x in installing-package-list
