@@ -7,6 +7,7 @@
 ;;;;;; ensime settings ;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;;; Use auto-complete for ensime
 (setq ensime-completion-style 'auto-complete)

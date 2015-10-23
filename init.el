@@ -52,6 +52,7 @@
     exec-path-from-shell
     powerline
     rainbow-mode
+    rainbow-delimiters    
     ))
 
 (let ((not-installed (loop for x in installing-package-list
