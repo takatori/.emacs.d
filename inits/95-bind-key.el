@@ -9,7 +9,8 @@
 (bind-key "C-S-t" 'delete-window)
 
 ;; C-hをBackSpaceに
-(bind-key "C-h" 'backward-delete-char)
+;; (bind-key "C-h" 'backward-delete-char)
+(bind-key "C-h" 'scroll-down-command)
 
 ;; 行番号を指定して移動する機能をM-zに割り当て
 (bind-key "M-z" 'goto-line)
@@ -45,22 +46,3 @@
 ;; dash (cocoa-emacs only)
 (bind-key "C-c d" 'dash-at-point)
 (bind-key "C-c e" 'dash-at-point-with-docset)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
