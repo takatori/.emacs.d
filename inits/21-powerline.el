@@ -1,26 +1,5 @@
 ;;; Powerline Setting
 (require 'powerline)
-(setq ns-use-srgb-colorspace nil)
-(setq powerline-color1 "#073642")
-(setq powerline-color2 "#002b36")
-
-(set-face-attribute 'mode-line nil
-                    :foreground "#fff"
-                    :background "#5e98c5"
-                    :box nil)
-(set-face-attribute 'mode-line-buffer-id nil
-                    :foreground "#fff"
-                    :bold t)
-(set-face-attribute 'mode-line-inactive nil
-                    :box nil)
-
-(set-face-attribute 'face1 nil
-                    :foreground "#fff"
-                    :background "#5e9032"
-                    :box nil)
-(set-face-attribute 'face-inactive1 nil
-                    :box nil)
-
 
 ;; Helper function
 ;; ディレクトリパスの表示を短くする
@@ -63,19 +42,13 @@
                                      (when buffer-read-only
                                        (powerline-raw "[RO]" mode-line)) 
                                      (powerline-raw "[%Z]" mode-line) ;; emacs標準のモードラインで[%Z]は文字コードと改行コードを表す
-
                                      (funcall separator-left mode-line face1) ;; mode-lineとface1の分割 三角形表示
                                      (powerline-vc face1 'r)
-                                     
-                                
-                                     
                                      (funcall separator-left face1 face2) ;; face1とface2の分割 三角形表示
-
                                      (powerline-raw
                                       (shorten-directory default-directory 15) ;; ディレクトリ名 'lは左寄せ 'rは右寄せ
                                       face2 'l)
                                      (powerline-buffer-id face2 'r) ;; ファイル名
-                                     
                                      (when (and (boundp 'which-func-mode) which-func-mode)
                                        (powerline-raw which-func-format face2 'l))
                                      (when (boundp 'erc-modified-channels-object)
@@ -94,5 +67,35 @@
                      (concat (powerline-render lhs)
                              (powerline-fill face2 (powerline-width rhs))
                              (powerline-render rhs)))))))
+
+(setq ns-use-srgb-colorspace nil)
+(setq powerline-color1 "#073642")
+(setq powerline-color2 "#002b36")
+
+(set-face-attribute 'mode-line nil
+                    :foreground "#fff"
+                    :background "#3366cc"
+                    :box nil)
+(set-face-attribute 'mode-line-buffer-id nil
+                    :foreground "#fff"
+                    :bold t)
+(set-face-attribute 'mode-line-inactive nil
+                    :box nil)
+
+(set-face-attribute 'powerline-active1 nil
+                    :foreground "#333333"
+                    :background "#FFD464"
+                    :box nil)
+(set-face-attribute 'powerline-inactive1 nil
+                    :box nil)
+
+
+(set-face-attribute 'powerline-active2 nil
+                    :foreground "#fff"
+                    :background "#333333"
+                    :box nil)
+(set-face-attribute 'powerline-inactive2 nil
+                    :box nil)
+
 
 (powerline-my-theme)
