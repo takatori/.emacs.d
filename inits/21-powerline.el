@@ -77,11 +77,10 @@
                     :background "#3366cc"
                     :box nil)
 (set-face-attribute 'mode-line-buffer-id nil
-                    :foreground "#fff"
+                    :foreground "#FFD464"
                     :bold t)
 (set-face-attribute 'mode-line-inactive nil
                     :box nil)
-
 (set-face-attribute 'powerline-active1 nil
                     :foreground "#333333"
                     :background "#FFD464"
