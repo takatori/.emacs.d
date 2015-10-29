@@ -77,7 +77,7 @@
                     :background "#3366cc"
                     :box nil)
 (set-face-attribute 'mode-line-buffer-id nil
-                    :foreground "#FFD464"
+                    :foreground "#ff6347"
                     :bold t)
 (set-face-attribute 'mode-line-inactive nil
                     :box nil)
