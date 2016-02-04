@@ -25,3 +25,7 @@ tramp
 projectile*
 recentf
 ensime
+
+
+# jedi
+.python-environments
