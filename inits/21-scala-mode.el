@@ -12,6 +12,8 @@
 ;;; Use auto-complete for ensime
 (setq ensime-completion-style 'auto-complete)
 
+;; カーソル下の情報をEldocで表示する
+;; エラーがあるときはエラー内容を、そうでない場合は型情報を表示する
 (defun scala/enable-eldoc ()
   "Show error message or type name at point by Eldoc."
   (setq-local eldoc-documentation-function
@@ -54,3 +56,4 @@
 ;; Initialization
 (add-hook 'ensime-mode-hook #'scala/enable-eldoc)
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+(add-hook 'scala-mode-hook 'flycheck-mode)
