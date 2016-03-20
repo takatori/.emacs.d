@@ -54,6 +54,7 @@
     rainbow-mode
     rainbow-delimiters
     monokai-theme
+    elscreen
     ))
 
 (let ((not-installed (loop for x in installing-package-list
