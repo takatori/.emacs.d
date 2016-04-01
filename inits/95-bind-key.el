@@ -42,7 +42,14 @@
 (bind-key "M-y" 'helm-show-kill-ring) ;; show-kill-ring
 (bind-key* "M-s" 'helm-projectile-ag) ;;helm-ag
 (bind-key* "M-r" 'helm-ag-this-file)
+(bind-key* "M-x" 'helm-M-x)
 
 ;; dash (cocoa-emacs only)
 (bind-key "C-c d" 'dash-at-point)
 (bind-key "C-c e" 'dash-at-point-with-docset)
+
+
+
+
+
+
