@@ -35,6 +35,8 @@
 ;; magit-status
 (bind-key* "C-x m" 'magit-status)
 
+;; elscreen
+(bind-key* "M-t" 'elscreen-next)
 
 ;;;;;;;;;;;;;;;;;;;  Helm ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (bind-key* "M-x" 'helm-M-x)
