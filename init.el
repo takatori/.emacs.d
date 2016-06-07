@@ -55,6 +55,8 @@
     rainbow-delimiters
     monokai-theme
     elscreen
+    tern
+    tern-auto-complete    
     ))
 
 (let ((not-installed (loop for x in installing-package-list

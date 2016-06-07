@@ -97,3 +97,6 @@
 ;; meta-keyをcommadに割り当て
 (when (eq system-type 'darwin)
   (setq ns-command-modifier (quote meta)))
+
+;; diredの表示順を変更する
+;; (setq dired-listing-switches "-aBhl  --group-directories-first")
