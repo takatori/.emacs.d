@@ -56,7 +56,8 @@
     monokai-theme
     elscreen
     tern
-    tern-auto-complete    
+    tern-auto-complete
+    terraform-mode    
     ))
 
 (let ((not-installed (loop for x in installing-package-list
@@ -71,4 +72,9 @@
 (require 'init-loader)
 (setq init-loader-show-log-after-init nil)
 (init-loader-load "~/.emacs.d/inits")
+
+
+
+
+
 
