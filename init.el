@@ -9,6 +9,8 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'exec-path (expand-file-name "~/homebrew/bin")) ;; homebrewで入れたツールを使う
+(add-to-list 'exec-path (expand-file-name "~/dev/go-workspace/bin")) ;; go getでインスールしたツールを使う
 (package-initialize)
 
 ;; -----------------------------------------------------------------------------
@@ -57,7 +59,8 @@
     elscreen
     tern
     tern-auto-complete
-    terraform-mode    
+    terraform-mode
+    go
     ))
 
 (let ((not-installed (loop for x in installing-package-list
