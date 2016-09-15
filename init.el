@@ -49,7 +49,7 @@
     yaml-mode
     open-junk-file
     arduino-mode
-    scala-mode2
+    scala-mode
     ensime
     exec-path-from-shell
     powerline
@@ -61,6 +61,7 @@
     tern-auto-complete
     terraform-mode
     go
+    groovy-mode    
     ))
 
 (let ((not-installed (loop for x in installing-package-list
@@ -75,9 +76,3 @@
 (require 'init-loader)
 (setq init-loader-show-log-after-init nil)
 (init-loader-load "~/.emacs.d/inits")
-
-
-
-
-
-
