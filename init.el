@@ -61,7 +61,9 @@
     tern-auto-complete
     terraform-mode
     go
-    groovy-mode    
+    groovy-mode
+    editorconfig
+    org-redmine
     ))
 
 (let ((not-installed (loop for x in installing-package-list
