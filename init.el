@@ -64,6 +64,7 @@
     groovy-mode
     editorconfig
     org-redmine
+    rust-mode
     ))
 
 (let ((not-installed (loop for x in installing-package-list
