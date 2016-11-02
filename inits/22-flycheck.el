@@ -1,7 +1,7 @@
-(add-hook 'js2-mode-hook 'flycheck-mode)
-(add-hook 'php-mode-hook 'flycheck-mode)
-(add-hook 'slim-mode-hook 'flycheck-mode)
-(add-hook 'scala-mode-hook 'flycheck-mode)
-(add-hook 'yaml-mode-hook 'flycheck-mode)
-(add-hook 'coffee-mode-hook 'flycheck-mode)
-(add-hook 'lua-mode-hook 'flycheck-mode)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+
+;; エラー内容をツールチップで表示
+;; @see https://github.com/flycheck/flycheck-pos-tip
+(with-eval-after-load 'flycheck
+  (flycheck-pos-tip-mode))

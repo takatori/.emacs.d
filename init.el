@@ -65,6 +65,9 @@
     editorconfig
     org-redmine
     rust-mode
+    flycheck-rust    
+    quickrun
+    flycheck-pos-tip    
     ))
 
 (let ((not-installed (loop for x in installing-package-list
