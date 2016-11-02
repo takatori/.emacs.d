@@ -67,7 +67,8 @@
     rust-mode
     flycheck-rust    
     quickrun
-    flycheck-pos-tip    
+    flycheck-pos-tip
+    toml-mode
     ))
 
 (let ((not-installed (loop for x in installing-package-list
