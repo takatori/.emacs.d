@@ -8,8 +8,12 @@
 (bind-key* "C-t" 'other-window-or-split)
 (bind-key "C-S-t" 'delete-window)
 
+;; C-jにも左移動を割り当て
+(bind-key "C-b" 'backward-char)
+(bind-key "C-j" 'backward-char)
+
 ;; C-hをBackSpaceに
-;; (bind-key "C-h" 'backward-delete-char)
+;; (bind-key "C-h" 'backward-deleTe-char)
 (bind-key "C-h" 'scroll-down-command)
 
 ;; 行番号を指定して移動する機能をM-zに割り当て
