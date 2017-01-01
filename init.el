@@ -70,6 +70,7 @@
     flycheck-pos-tip
     toml-mode
     racer
+    dockerfile-mode
     ))
 
 (let ((not-installed (loop for x in installing-package-list
