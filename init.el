@@ -71,6 +71,8 @@
     toml-mode
     racer
     dockerfile-mode
+    php-mode
+    nginx-mode
     ))
 
 (let ((not-installed (loop for x in installing-package-list
