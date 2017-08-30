@@ -8,6 +8,9 @@
 (setq auto-save-file-name-transforms
       `((".*" ,(expand-file-name "~/.emacs.d/backup/") t)))
 
+;; デフォルトの文字コード
+(set-default-coding-systems 'utf-8-dos)
+
 ;; コメントアウトの形式変更
 (setq comment-style 'multi-line)
 
