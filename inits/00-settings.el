@@ -8,9 +8,6 @@
 (setq auto-save-file-name-transforms
       `((".*" ,(expand-file-name "~/.emacs.d/backup/") t)))
 
-;; デフォルトの文字コード
-(set-default-coding-systems 'utf-8-dos)
-
 ;; コメントアウトの形式変更
 (setq comment-style 'multi-line)
 
@@ -101,9 +98,26 @@
 (when (eq system-type 'darwin)
   (setq ns-command-modifier (quote meta)))
 
+;; clipboardを同期
+(defun copy-from-osx ()
+  (shell-command-to-string "pbpaste"))
+
+(defun paste-to-osx (text &optional push)
+  (let ((process-connection-type nil))
+    (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+      (process-send-string proc text)
+      (process-send-eof proc))))
+
+(setq interprogram-cut-function 'paste-to-osx)
+(setq interprogram-paste-function 'copy-from-osx)
+
 ;; diredの表示順を変更する
 ;; (setq dired-listing-switches "-aBhl  --group-directories-first")
 
 ;; editorconfig
 (require 'editorconfig)
 (editorconfig-mode 1)
+
+
+;; Linuxカーネルで使用されているコーディングスタイルを使用する
+(setq c-default-style "linux")
