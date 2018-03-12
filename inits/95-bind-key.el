@@ -42,6 +42,9 @@
 ;; elscreen
 (bind-key* "M-t" 'elscreen-next)
 
+;; neotree
+(bind-key* "M-n" 'neotree-toggle)
+
 ;;;;;;;;;;;;;;;;;;;  Helm ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (bind-key* "M-x" 'helm-M-x)
 (bind-key* "C-x C-r" 'helm-recentf)
