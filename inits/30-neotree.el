@@ -19,6 +19,6 @@
 (setq neo-window-width 30)
 
 ;; オートリフレッシュ
-(setq neo-autorefresh t)
+;;(setq neo-autorefresh t)
 
 
