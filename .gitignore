@@ -25,7 +25,8 @@ tramp
 projectile*
 recentf
 ensime
-
+emojis
+network-security.data
 
 # jedi
 .python-environments
