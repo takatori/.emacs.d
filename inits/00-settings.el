@@ -1,12 +1,29 @@
+
+
+;;;; Emacs で自動作成されるファイル(バックアップ、自動保存、ロック)の設定 ;;;;
+;; [参考](http://yohshiy.blog.fc2.com/blog-entry-319.html)
+
+;; バックアップファイル(編集前のファイル)
 ;; create backup file in ~/.emacs.d/backup
 (setq make-backup-files nil)
 (setq backup-directory-alist
   (cons (cons "\\.*$" (expand-file-name "~/.emacs.d/backup"))
     backup-directory-alist))
+ ;; 番号付けによる複数保存
+ (setq version-control     t)  ;; 実行の有無
+ (setq kept-new-versions   5)  ;; 最新の保持数
+ (setq kept-old-versions   1)  ;; 最古の保持数
+(setq delete-old-versions t)  ;; 範囲外を削除
 
+;; 自動保存ファイル(編集中のファイルを保存したファイル)
 ;; create auto-save file in ~/.emacs.d/backup
 (setq auto-save-file-name-transforms
       `((".*" ,(expand-file-name "~/.emacs.d/backup/") t)))
+
+;; ロックファイルを作成しない
+(setq create-lockfiles nil)
+
+
 
 ;; コメントアウトの形式変更
 (setq comment-style 'multi-line)
