@@ -79,6 +79,7 @@
     highlight-symbol
     all-the-icons
     neotree
+    restclient
     ))
 
 (let ((not-installed (loop for x in installing-package-list
@@ -106,7 +107,7 @@
  '(helm-ag-insert-at-point (quote symbol))
  '(package-selected-packages
    (quote
-    (neotree all-the-icons highlight-symbol package-utils docker emojify go-mode apib-mode zenburn-theme yascroll yaml-mode web-mode volatile-highlights toml-mode terraform-mode tern-auto-complete scss-mode recentf-ext rainbow-mode rainbow-delimiters racer quickrun powerline php-mode org-redmine open-junk-file nginx-mode multiple-cursors monokai-theme markdown-mode magit js2-mode init-loader helm-projectile helm-ag groovy-mode google-c-style go flycheck-rust flycheck-pos-tip expand-region exec-path-from-shell ensime elscreen editorconfig dockerfile-mode coffee-mode bind-key auto-save-buffers-enhanced arduino-mode anzu))))
+    (restclient protobuf-mode esa neotree all-the-icons highlight-symbol package-utils docker emojify go-mode apib-mode zenburn-theme yascroll yaml-mode web-mode volatile-highlights toml-mode terraform-mode tern-auto-complete scss-mode recentf-ext rainbow-mode rainbow-delimiters racer quickrun powerline php-mode org-redmine open-junk-file nginx-mode multiple-cursors monokai-theme markdown-mode magit js2-mode init-loader helm-projectile helm-ag groovy-mode google-c-style go flycheck-rust flycheck-pos-tip expand-region exec-path-from-shell ensime elscreen editorconfig dockerfile-mode coffee-mode bind-key auto-save-buffers-enhanced arduino-mode anzu))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
