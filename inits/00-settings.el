@@ -100,6 +100,8 @@
 
 ;; ビープ音を消す
 (setq visible-bell t)
+;; 警告マークを表示させないようにする
+(setq ring-bell-function 'ignore)
 
 ;; 起動時のウィンドウサイズを設定
 (if (boundp 'window-system)
