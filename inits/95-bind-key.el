@@ -6,6 +6,7 @@
 
 ;; window の移動
 (bind-key* "C-t" 'other-window-or-split)
+(bind-key* "C-\\" 'split-window-horizontally)
 (bind-key "C-S-t" 'delete-window)
 
 ;; C-jにも左移動を割り当て

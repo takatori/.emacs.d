@@ -29,7 +29,6 @@
     helm
     helm-projectile
     helm-ag
-    auto-complete
     auto-save-buffers-enhanced
     flycheck
     web-mode
@@ -57,8 +56,6 @@
     rainbow-delimiters
     monokai-theme
     elscreen
-    tern
-    tern-auto-complete
     terraform-mode
     go
     groovy-mode
@@ -81,6 +78,7 @@
     neotree
     restclient
     vlf
+    company    
     ))
 
 (let ((not-installed (loop for x in installing-package-list
@@ -108,10 +106,15 @@
  '(helm-ag-insert-at-point (quote symbol))
  '(package-selected-packages
    (quote
-    (vlf restclient protobuf-mode esa neotree all-the-icons highlight-symbol package-utils docker emojify go-mode apib-mode zenburn-theme yascroll yaml-mode web-mode volatile-highlights toml-mode terraform-mode tern-auto-complete scss-mode recentf-ext rainbow-mode rainbow-delimiters racer quickrun powerline php-mode org-redmine open-junk-file nginx-mode multiple-cursors monokai-theme markdown-mode magit js2-mode init-loader helm-projectile helm-ag groovy-mode google-c-style go flycheck-rust flycheck-pos-tip expand-region exec-path-from-shell ensime elscreen editorconfig dockerfile-mode coffee-mode bind-key auto-save-buffers-enhanced arduino-mode anzu))))
+    (go-eldoc company-go vlf restclient protobuf-mode esa neotree all-the-icons highlight-symbol package-utils docker emojify go-mode apib-mode zenburn-theme yascroll yaml-mode web-mode volatile-highlights toml-mode terraform-mode tern-auto-complete scss-mode recentf-ext rainbow-mode rainbow-delimiters racer quickrun powerline php-mode org-redmine open-junk-file nginx-mode multiple-cursors monokai-theme markdown-mode magit js2-mode init-loader helm-projectile helm-ag groovy-mode google-c-style go flycheck-rust flycheck-pos-tip expand-region exec-path-from-shell ensime elscreen editorconfig dockerfile-mode coffee-mode bind-key auto-save-buffers-enhanced arduino-mode anzu))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(company-preview ((t (:foreground "darkgray" :underline t))))
+ '(company-preview-common ((t (:inherit company-preview))))
+ '(company-tooltip ((t (:background "lightgray" :foreground "black"))))
+ '(company-tooltip-common ((((type x)) (:inherit company-tooltip :weight bold)) (t (:inherit company-tooltip))))
+ '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
+ '(company-tooltip-selection ((t (:background "steelblue" :foreground "white")))))
