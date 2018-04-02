@@ -133,10 +133,6 @@
 ;; diredの表示順を変更する
 ;; (setq dired-listing-switches "-aBhl  --group-directories-first")
 
-;; editorconfig
-(require 'editorconfig)
-(editorconfig-mode 1)
-
 
 ;; Linuxカーネルで使用されているコーディングスタイルを使用する
 (setq c-default-style "linux")

@@ -37,7 +37,7 @@
 (set-face-foreground 'elscreen-tab-current-screen-face "coral")
 (set-face-background 'elscreen-tab-current-screen-face ' "#2e333b")
 (set-face-underline-p 'elscreen-tab-current-screen-face t)
-(set-face-foreground 'elscreen-tab-other-screen-face "#CAF5FD")
+(set-face-foreground 'elscreen-tab-other-screen-face "#aeb5bd")
 (set-face-background 'elscreen-tab-other-screen-face "#2e333b")
 
 (elscreen-start)

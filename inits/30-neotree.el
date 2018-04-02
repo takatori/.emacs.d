@@ -16,7 +16,11 @@
 (setq neo-smart-open t)
 
 ;; デフォルトのウィンドウサイズ
-(setq neo-window-width 30)
+(setq neo-window-width 50)
+
+;; 表示を右側に
+;; elscreenのタブと干渉するため
+(setq neo-window-position 'right)
 
 ;; オートリフレッシュ
 ;;(setq neo-autorefresh t)
