@@ -7,6 +7,8 @@
 (require 'go-eldoc)
 (require 'company-go)
 
+(setq gofmt-command "goimports")
+
 (add-hook 'go-mode-hook 'go-eldoc-setup)
 (add-hook 'go-mode-hook 'flycheck-mode) ;; flycheck-modeを有効化してシンタックスエラーを検知
 (add-hook 'go-mode-hook (lambda()
