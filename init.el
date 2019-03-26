@@ -1,119 +1,51 @@
-;; -----------------------------------------------------------------------------
-;; ~/.emacs.d/site-lisp 以下全部読み込み
-(let ((default-directory (expand-file-name "~/.emacs.d/site-lisp")))
-  (add-to-list 'load-path default-directory)
-  (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-      (normal-top-level-add-subdirs-to-load-path)))
-;; -----------------------------------------------------------------------------
-;; パッケージの取得先追加
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'exec-path (expand-file-name "~/homebrew/bin")) ;; homebrewで入れたツールを使う
-(add-to-list 'exec-path (expand-file-name "~/dev/go-workspace/bin")) ;; go getでインスールしたツールを使う
-(package-initialize)
+(defconst emacs-start-time (current-time))
 
-;; -----------------------------------------------------------------------------
-;; パッケージ自動インストール設定
+(defvar file-name-handler-alist-old file-name-handler-alist)
 
-(eval-when-compile
-  (require 'cl))
+(setq package-enable-at-startup nil
+      file-name-handler-alst nil
+      message-log-max 16384
+      gc-cons-threshold 402653184
+      gc-cons-percentage 0.6
+      auto-window-vscroll nil)
 
+(add-hook 'after-init-hook
+          `(lambda ()
+             (setq file-name-handler-alist file-name-handler-alist-old
+                   gc-cons-threshold 800000
+                   gc-cons-percentage 0.1)
+             (garbage-collect)) t)
 
-(defvar installing-package-list
-  '(
-    ;; ここに使っているパッケージを書く。
-    init-loader
-    recentf-ext
-    magit
-    helm
-    helm-projectile
-    auto-save-buffers-enhanced
-    flycheck
-    web-mode
-    bind-key
-    projectile
-    volatile-highlights
-    markdown-mode
-    multiple-cursors
-    zenburn-theme
-    expand-region
-    anzu
-    yascroll
-    scss-mode
-    google-c-style
-    yaml-mode
-    open-junk-file
-    scala-mode
-    ensime
-    exec-path-from-shell
-    powerline
-    rainbow-mode
-    rainbow-delimiters
-    monokai-theme
-    elscreen
-    terraform-mode
-    go
-    groovy-mode
-    editorconfig
-    org-redmine
-    rust-mode
-    flycheck-rust    
-    quickrun
-    flycheck-pos-tip
-    toml-mode
-    racer
-    dockerfile-mode
-    php-mode
-    nginx-mode
-    go-mode
-    emojify
-    docker
-    highlight-symbol
-    all-the-icons
-    neotree
-    restclient
-    vlf
-    company
-    helm-rg
-    kubernetes
-    company-web
-    ))
+;;; Functions
 
-(let ((not-installed (loop for x in installing-package-list
-                            when (not (package-installed-p x))
-                            collect x)))
-  (when not-installed
-    (package-refresh-contents)
-    (dolist (pkg not-installed)
-        (package-install pkg))))
-
-;; -----------------------------------------------------------------------------
-(require 'init-loader)
-(setq init-loader-show-log-after-init nil)
-(init-loader-load "~/.emacs.d/inits")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(anzu-deactivate-region t)
- '(anzu-mode-lighter "")
- '(anzu-search-threshold 1000)
- '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
- '(helm-ag-command-option "--all-text")
- '(helm-ag-insert-at-point (quote symbol))
- '(package-selected-packages
-   (quote
-    (company-web kubernetes docker-compose-mode helm-rg go-eldoc company-go vlf restclient protobuf-mode esa neotree all-the-icons highlight-symbol package-utils docker emojify go-mode apib-mode zenburn-theme yascroll yaml-mode web-mode volatile-highlights toml-mode terraform-mode tern-auto-complete scss-mode recentf-ext rainbow-mode rainbow-delimiters racer quickrun powerline php-mode org-redmine open-junk-file nginx-mode multiple-cursors monokai-theme markdown-mode magit js2-mode init-loader helm-projectile helm-ag groovy-mode google-c-style go flycheck-rust flycheck-pos-tip expand-region exec-path-from-shell ensime elscreen editorconfig dockerfile-mode coffee-mode bind-key auto-save-buffers-enhanced arduino-mode anzu))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-preview ((t (:foreground "darkgray" :underline t))))
- '(company-preview-common ((t (:inherit company-preview))))
- '(company-tooltip ((t (:background "lightgray" :foreground "black"))))
- '(company-tooltip-common ((((type x)) (:inherit company-tooltip :weight bold)) (t (:inherit company-tooltip))))
- '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
- '(company-tooltip-selection ((t (:background "steelblue" :foreground "white")))))
+(eval-and-compile
+  
+  (defun emacs-path (path)
+    (expand-file-name path user-emacs-directory))
+  
+  (defun lookup-password (host user port)
+    (require 'auth-source)
+    (require 'auth-source-pass)
+    (let ((auth (auth-source-search :host host :user user :port port)))
+      (if auth
+          (let ((secretf (plist-get (car auth) :secret)))
+            (if secretf
+                (funcall secretf)
+              (error "Auth entry for %s@%s:%s has no secret!"
+                     user host port)))
+        (error "No auth entry found for %s@%s:%s user host port"))))
+  
+  (defvar saved-window-configuration nil)
+  
+  (defun push-window-configuration ()
+    (interactive)
+    (push (current-window-configuration) saved-window-configuration))
+  
+  (defun pop-window-configuration ()
+    (interactive)
+    (let ((config (pop saved-window-configuration)))
+      (if config
+          (set-window-configuration config)
+        (if (> (length (window-list)) 1)
+            (delete-window)
+          (bury-bufffer))))))
