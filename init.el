@@ -1,3 +1,10 @@
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (defconst emacs-start-time (current-time))
 
 (defvar file-name-handler-alist-old file-name-handler-alist)
@@ -49,3 +56,52 @@
         (if (> (length (window-list)) 1)
             (delete-window)
           (bury-bufffer))))))
+
+
+;;; Environment
+
+(eval-and-compile
+  (defconst emacs-environment (getenv "NIX_MYENV_NAME"))
+
+  (setq load-path
+	(append '("~/.emacs.d")
+		(delete-dups load-path)
+		'("~/.emacs.d/lisp")))
+
+  (defun filter (f args)
+    (let (result)
+      (dolist (arg args)
+	(when (funcall f arg)
+	  (setq result (cons arg result))))
+      (nreverse result)))
+
+  
+
+  (defconst load-path-reject-re "/\\.emacs\\.d/\\(lib\\|site-lisp\\)/"
+    "Regexp matching `:load-path' values to be rejected.")
+
+  (defun load-path-handler-override (orig-func name keyword args rest state)
+    (if (cl-some (apply-partially #'string-match load-path-reject-re) args)
+	(use-package-process-keywords name rest state)
+      (let ((body (use-package-process-keywords name rest state)))
+	(use-package-concat
+	 (mapcar #'(lambda (path)
+		     `(eval-and-compile (add-to-list 'load-path ,path t)))
+		 args)
+	 body))))
+
+  (advice-add 'use-package-handler/:load-path
+	      :around #'load-path-handler-override)
+
+  (if init-file-debug
+      (setq use-package-verbose t
+	    use-package-expand-minimally nil
+	    use-package-compute-statistics t
+	    debug-on-error t)
+    (setq use-package-verbose nil
+	  use-package-expand-minimally t)))
+
+;;; Settings
+
+(setq custom-file "~/.emacs.d/settings.el")
+(load (emacs-path "settings"))
