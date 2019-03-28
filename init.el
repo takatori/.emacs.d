@@ -1,10 +1,4 @@
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-
 (defconst emacs-start-time (current-time))
 
 (defvar file-name-handler-alist-old file-name-handler-alist)
@@ -75,8 +69,27 @@
 	  (setq result (cons arg result))))
       (nreverse result)))
 
-  
+  ;; init straight.el
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
+  ;; install use-package
+  (straight-use-package 'use-package)
+
+  ;; オプションなしで自動的にuse-packageをstraight.elにフォールバックする
+  ;; 本来は (use-package hoge :straight t) のように書く必要がある
+  (setq straight-use-package-by-default t)
+  
   (defconst load-path-reject-re "/\\.emacs\\.d/\\(lib\\|site-lisp\\)/"
     "Regexp matching `:load-path' values to be rejected.")
 
@@ -101,7 +114,43 @@
     (setq use-package-verbose nil
 	  use-package-expand-minimally t)))
 
-;;; Settings
+;;; Keymaps
 
-(setq custom-file "~/.emacs.d/settings.el")
-(load (emacs-path "settings"))
+(eval-and-compile
+  (mapc #'(lambda (entry)
+	    (define-prefix-command (cdr entry))
+	    (bind-key (car entry) (cdr entry)))
+	    '(("C-l" . kill-ring-save)
+	      )))
+
+;;; Packages
+
+(use-package doom-themes
+  :custom
+  (doom-themes-enable-italic t)
+  (doom-themes-enable-bold t)
+  :custom-face
+  (doom-modeline-bar ((t (:background "#6272a4"))))
+  :config
+  (load-theme 'doom-dracula t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
+
+(use-package doom-modeline
+  :custom
+  (doom-modeline-buffer-file-name-style 'truncate-with-project)
+  (doom-modeline-icon t)
+  (doom-modeline-major-mode-icon nil)
+  (doom-modeline-minor-modes nil)
+  :hook
+  (after-init . doom-modeline-mode)
+  :config
+  (line-number-mode 0)
+  (column-number-mode 0)
+  (doom-modeline-def-modeline 'main
+ '(bar workspace-number window-number evil-state god-state ryo-modal xah-fly-keys matches buffer-info remote-host buffer-position parrot selection-info)
+ '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker)))
+
+
+(use-package expand-region
+  :bind ("C-," . er/expand-region))
