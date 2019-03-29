@@ -124,6 +124,22 @@
 	      )))
 
 ;;; Packages
+(use-package amx)
+
+(use-package anzu
+  :config
+  (global-anzu-mode +1))
+
+(use-package dashboard
+  :diminish
+  (dashboard-mode)
+  :custom
+  (dashboard-startup-banner 2)
+  (dashboard-items '((recents . 15)
+		     (projects . 5)
+		     (bookmarks . 5)))
+  :hook
+  (after-init . dashboard-setup-startup-hook))
 
 (use-package doom-themes
   :custom
@@ -154,3 +170,13 @@
 
 (use-package expand-region
   :bind ("C-," . er/expand-region))
+
+(use-package hide-mode-line
+  :hook
+  ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode))
+
+(use-package nyan-mode)
+
+(use-package which-key
+  :diminish which-key-mode
+  :hook (after-init . which-key-mode))
