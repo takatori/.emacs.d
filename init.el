@@ -114,6 +114,96 @@
     (setq use-package-verbose nil
 	  use-package-expand-minimally t)))
 
+;;; Settings
+
+;;;; Emacs で自動作成されるファイル(バックアップ、自動保存、ロック)の設定 ;;;;
+;; [参考](http://yohshiy.blog.fc2.com/blog-entry-319.html)
+;; バックアップファイル(編集前のファイル)
+;; create backup file in ~/.emacs.d/backup
+(setq make-backup-files nil)
+(setq backup-directory-alist
+      (cons (cons "\\.*$" (expand-file-name "~/.emacs.d/backup"))
+	    backup-directory-alist))
+ ;; 番号付けによる複数保存
+(setq version-control     t)  ;; 実行の有無
+(setq kept-new-versions   5)  ;; 最新の保持数
+(setq kept-old-versions   1)  ;; 最古の保持数
+(setq delete-old-versions t)  ;; 範囲外を削除
+
+;; 自動保存ファイル(編集中のファイルを保存したファイル)
+;; create auto-save file in ~/.emacs.d/backup
+(setq auto-save-file-name-transforms
+      `((".*" ,(expand-file-name "~/.emacs.d/backup/") t)))
+
+;; ロックファイルを作成しない
+(setq create-lockfiles nil)
+
+;; 閉じ括弧自動挿入
+(electric-pair-mode 1)
+
+;; 編集時 buffer 再読み込み
+(global-auto-revert-mode 1)
+
+;; save-buffer 時，buffer 末尾に空行が常にあるように
+(setq require-final-newline t)
+
+;; Emacs の質問を y/n に
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; 補完時に大文字小文字を区別しない
+(setq completion-ignore-case t)
+(setq read-file-name-completion-ignore-case t)
+
+;; シンボリックリンクを開くときの質問省略
+(setq vc-follow-symlinks t)
+
+;; 行数表示
+(global-linum-mode t)
+;; linum-mode をいじって Emacs を高速化
+(setq linum-delay t)
+(defadvice linum-schedule (around my-linum-schedule () activate)
+  (run-with-idle-timer 0.2 nil #'linum-update-current))
+
+;; スクロール時の移動量を1に
+(setq scroll-step 1)
+
+;; カーソルの位置が何文字目かを表示する
+(column-number-mode t)
+
+;; カーソルの位置が何行目かを表示する
+(line-number-mode t)
+
+;; 通常のウィンドウで行を折り返さない
+(setq-default truncate-lines t)
+
+;; ツールバーを非表示 メニューバーを非表示 スクロールバーを非表示
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+
+;;;現在行に色を付ける
+(global-hl-line-mode 1)
+
+;; ビープ音を消す
+(setq visible-bell t)
+;; 警告マークを表示させないようにする
+(setq ring-bell-function 'ignore)
+
+;; 起動時のウィンドウサイズを設定
+(if (boundp 'window-system)
+    (setq initial-frame-alist
+          (append (list
+                   '(width . 180)
+                   '(height . 50))
+                  initial-frame-alist)))
+(setq default-frame-alist initial-frame-alist)
+
+;; for mac
+;; meta-keyをcommadに割り当て
+(when (eq system-type 'darwin)
+  (setq ns-command-modifier (quote meta)))
+
+
 ;;; Keymaps
 
 (eval-and-compile
@@ -135,7 +225,6 @@
   (beacon-color "yellow")
   :config
   (beacon-mode 1))
-
 
 (use-package counsel
   :after ivy
@@ -341,9 +430,6 @@
   (setq ivy-virtual-abbreviate 'full
         ivy-rich-switch-buffer-align-virtual-buffer t
         ivy-rich-path-style 'abbrev))
-
-
-
 
 (use-package magit
   :bind (("C-x g" . magit-status)
