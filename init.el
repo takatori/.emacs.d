@@ -58,8 +58,7 @@
   (defconst emacs-environment (getenv "NIX_MYENV_NAME"))
 
   (setq load-path
-	(append '("~/.emacs.d")
-		(delete-dups load-path)
+	(append (delete-dups load-path)
 		'("~/.emacs.d/lisp")))
 
   (defun filter (f args)
@@ -169,9 +168,9 @@
 ;; 通常のウィンドウで行を折り返さない
 (setq-default truncate-lines t)
 
-;; ツールバーを非表示 メニューバーを非表示 スクロールバーを非表示
+;; ツールバーを非表示 スクロールバーを非表示
 (tool-bar-mode -1)
-(menu-bar-mode -1)
+(menu-bar-mode 1)
 (scroll-bar-mode -1)
 
 ;;;現在行に色を付ける
@@ -202,10 +201,19 @@
 
 (eval-and-compile
   (mapc #'(lambda (entry)
-	    (define-prefix-command (cdr entry))
-	    (bind-key (car entry) (cdr entry)))
-	    '(("C-l" . kill-ring-save)
-	      )))
+            (define-prefix-command (cdr entry))
+            (bind-key (car entry) (cdr entry)))
+        '(("C-l" . ivy-kill-ring-save)
+	  ("C-;" . comment-line)
+	  )))
+
+(bind-keys*
+ ("C-t"   . other-window)
+ ("C-\\"  . split-window-horizontally)
+ ("C--"   . split-window-vertically) 
+ ("C-S-t" . delete-window)
+ ("C-M-n" . forward-page)
+ ("C-M-p" . backward-page))
 
 ;;; Packages
 (use-package amx)
@@ -213,6 +221,11 @@
 (use-package anzu
   :config
   (global-anzu-mode +1))
+
+(use-package auto-save-buffers-enhanced
+  :config
+  (setq auto-save-buffers-enhanced-interval 1)
+  (auto-save-buffers-enhanced t))
 
 (use-package beacon
   :custom
@@ -355,8 +368,9 @@
   :diminish
   :demand t
 
-  :bind (("C-x b" . ivy-switch-buffer)
-         ("C-x B" . ivy-switch-buffer-other-window)
+  :bind (("C-x b"   . ivy-switch-buffer)
+         ("C-x B"   . ivy-switch-buffer-other-window)
+	 ("C-x C-r" . ivy-recentf)
          ("M-H"   . ivy-resume))
 
   :bind (:map ivy-minibuffer-map
