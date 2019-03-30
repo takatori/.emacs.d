@@ -144,9 +144,6 @@
 ;; 編集時 buffer 再読み込み
 (global-auto-revert-mode 1)
 
-;; save-buffer 時，buffer 末尾に空行が常にあるように
-(setq require-final-newline t)
-
 ;; Emacs の質問を y/n に
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -158,11 +155,7 @@
 (setq vc-follow-symlinks t)
 
 ;; 行数表示
-(global-linum-mode t)
-;; linum-mode をいじって Emacs を高速化
-(setq linum-delay t)
-(defadvice linum-schedule (around my-linum-schedule () activate)
-  (run-with-idle-timer 0.2 nil #'linum-update-current))
+(global-display-line-numbers-mode)
 
 ;; スクロール時の移動量を1に
 (setq scroll-step 1)
@@ -197,6 +190,7 @@
                    '(height . 50))
                   initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
+
 
 ;; for mac
 ;; meta-keyをcommadに割り当て
