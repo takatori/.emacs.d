@@ -130,6 +130,76 @@
   :config
   (global-anzu-mode +1))
 
+(use-package beacon
+  :custom
+  (beacon-color "yellow")
+  :config
+  (beacon-mode 1))
+
+
+(use-package counsel
+  :after ivy
+  :demand t
+  :diminish
+  :custom (counsel-find-file-ignore-regexp
+           (concat "\\(\\`\\.[^.]\\|"
+                   (regexp-opt completion-ignored-extensions)
+                   "\\'\\)"))
+  :bind (("C-*"     . counsel-org-agenda-headlines)
+         ("C-x C-f" . counsel-find-file)
+         ("C-c e l" . counsel-find-library)
+         ("C-c e q" . counsel-set-variable)
+         ;;("C-h e l" . counsel-find-library)
+         ;;("C-h e u" . counsel-unicode-char)
+         ("C-h f"   . counsel-describe-function)
+         ("C-x r b" . counsel-bookmark)
+         ("M-x"     . counsel-M-x)
+         ;; ("M-y"     . counsel-yank-pop)
+
+         ("M-s f" . counsel-file-jump)
+         ;; ("M-s g" . counsel-rg)
+         ("M-s j" . counsel-dired-jump))
+  :commands counsel-minibuffer-history
+  :init
+  (bind-key "M-r" #'counsel-minibuffer-history minibuffer-local-map)
+  :config
+  (add-to-list 'ivy-sort-matches-functions-alist
+               '(counsel-find-file . ivy--sort-files-by-date))
+
+  (defun counsel-recoll-function (string)
+    "Run recoll for STRING."
+    (if (< (length string) 3)
+        (counsel-more-chars 3)
+      (counsel--async-command
+       (format "recollq -t -b %s"
+               (shell-quote-argument string)))
+      nil))
+
+  (defun counsel-recoll (&optional initial-input)
+    "Search for a string in the recoll database.
+  You'll be given a list of files that match.
+  Selecting a file will launch `swiper' for that file.
+  INITIAL-INPUT can be given as the initial minibuffer input."
+    (interactive)
+    (counsel-require-program "recollq")
+    (ivy-read "recoll: " 'counsel-recoll-function
+              :initial-input initial-input
+              :dynamic-collection t
+              :history 'counsel-git-grep-history
+              :action (lambda (x)
+                        (when (string-match "file://\\(.*\\)\\'" x)
+                          (let ((file-name (match-string 1 x)))
+                            (find-file file-name)
+                            (unless (string-match "pdf$" x)
+                              (swiper ivy-text)))))
+              :unwind #'counsel-delete-process
+	      :caller 'counsel-recoll)))
+
+(use-package counsel-projectile
+  :after (counsel projectile)
+  :config
+  (counsel-projectile-mode 1))
+
 (use-package dashboard
   :diminish
   (dashboard-mode)
@@ -171,12 +241,240 @@
 (use-package expand-region
   :bind ("C-," . er/expand-region))
 
+
+(use-package git-gutter
+    :custom
+    (git-gutter:modified-sign "~")
+    (git-gutter:added-sign    "+")
+    (git-gutter:deleted-sign  "-")
+    :custom-face
+    (git-gutter:modified ((t (:background "#f1fa8c"))))
+    (git-gutter:added    ((t (:background "#50fa7b"))))
+    (git-gutter:deleted  ((t (:background "#ff79c6"))))
+    :config
+    (global-git-gutter-mode +1))
+
 (use-package hide-mode-line
   :hook
   ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode))
 
-(use-package nyan-mode)
+(use-package highlight-indent-guides
+  :diminish
+  :hook
+  ((prog-mode yaml-mode) . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-auto-enabled t)
+  (highlight-indent-guides-responsive t)
+  (highlight-indent-guides-method 'character)) ; column
+
+
+(use-package ivy
+  :diminish
+  :demand t
+
+  :bind (("C-x b" . ivy-switch-buffer)
+         ("C-x B" . ivy-switch-buffer-other-window)
+         ("M-H"   . ivy-resume))
+
+  :bind (:map ivy-minibuffer-map
+              ("<tab>" . ivy-alt-done)
+              ("SPC"   . ivy-alt-done-or-space)
+              ("C-d"   . ivy-done-or-delete-char)
+              ("C-i"   . ivy-partial-or-done)
+              ("C-r"   . ivy-previous-line-or-history)
+              ("M-r"   . ivy-reverse-i-search))
+
+  :bind (:map ivy-switch-buffer-map
+              ("C-k" . ivy-switch-buffer-kill))
+
+  :custom
+  (ivy-dynamic-exhibit-delay-ms 200)
+  (ivy-height 10)
+  (ivy-initial-inputs-alist nil t)
+  (ivy-magic-tilde nil)
+  (ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+  (ivy-use-virtual-buffers t)
+  (ivy-wrap t)
+
+  :preface
+  (defun ivy-done-or-delete-char ()
+    (interactive)
+    (call-interactively
+     (if (eolp)
+         #'ivy-immediate-done
+       #'ivy-delete-char)))
+
+  (defun ivy-alt-done-or-space ()
+    (interactive)
+    (call-interactively
+     (if (= ivy--length 1)
+         #'ivy-alt-done
+       #'self-insert-command)))
+
+  (defun ivy-switch-buffer-kill ()
+    (interactive)
+    (debug)
+    (let ((bn (ivy-state-current ivy-last)))
+      (when (get-buffer bn)
+        (kill-buffer bn))
+      (unless (buffer-live-p (ivy-state-buffer ivy-last))
+        (setf (ivy-state-buffer ivy-last)
+              (with-ivy-window (current-buffer))))
+      (setq ivy--all-candidates (delete bn ivy--all-candidates))
+      (ivy--exhibit)))
+
+  ;; This is the value of `magit-completing-read-function', so that we see
+  ;; Magit's own sorting choices.
+  (defun my-ivy-completing-read (&rest args)
+    (let ((ivy-sort-functions-alist '((t . nil))))
+      (apply 'ivy-completing-read args)))
+
+  :config
+  (ivy-mode 1)
+  (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur))
+
+(use-package ivy-rich
+  :after ivy
+  :demand t
+  :config
+  (ivy-rich-mode 1)
+  (setq ivy-virtual-abbreviate 'full
+        ivy-rich-switch-buffer-align-virtual-buffer t
+        ivy-rich-path-style 'abbrev))
+
+
+
+
+(use-package magit
+  :bind (("C-x g" . magit-status)
+         ("C-x G" . magit-status-with-prefix))
+  :bind (:map magit-mode-map
+              ("U" . magit-unstage-all)
+              ("M-h") ("M-s") ("M-m") ("M-w"))
+  :bind (:map magit-file-section-map ("<C-return>"))
+  :bind (:map magit-hunk-section-map ("<C-return>"))
+  :preface
+  ;; History can be viewed with:
+  ;; git log refs/snapshots/$(git symbolic-ref HEAD)
+  (defun magit-monitor (&optional no-display)
+    "Start git-monitor in the current directory."
+    (interactive)
+    (let* ((path (file-truename
+                  (directory-file-name
+                   (expand-file-name default-directory))))
+           (name (format "*git-monitor: %s*"
+                         (file-name-nondirectory path))))
+      (unless (and (get-buffer name)
+                   (with-current-buffer (get-buffer name)
+                     (string= path (directory-file-name default-directory))))
+        (with-current-buffer (get-buffer-create name)
+          (cd path)
+          (ignore-errors
+            (start-process "*git-monitor*" (current-buffer)
+                           "git-monitor" "-d" path))))))
+
+  (defun magit-status-with-prefix ()
+    (interactive)
+    (let ((current-prefix-arg '(4)))
+      (call-interactively 'magit-status)))
+
+  (defun endless/visit-pull-request-url ()
+    "Visit the current branch's PR on Github."
+    (interactive)
+    (browse-url
+     (format "https://github.com/%s/pull/new/%s"
+             (replace-regexp-in-string 
+             "\\`.+github\\.com:\\(.+?\\)\\(\\.git\\)?\\'" "\\1"
+              (magit-get "remote" (magit-get-remote) "url"))
+             (magit-get-current-branch))))
+
+  :hook (magit-mode . hl-line-mode)
+  :config
+  (add-hook 'magit-status-mode-hook #'(lambda () (magit-monitor t)))
+  (define-key magit-mode-map "G" #'endless/visit-pull-request-url))
+
+(use-package forge
+  :after magit)
+
+(use-package neotree
+  :after
+  projectile
+  :commands
+  (neotree-show neotree-hide neotree-dir neotree-find)
+  :custom
+  (neo-theme 'nerd2)
+  :bind
+  ("<f9>" . neotree-projectile-toggle)
+  :preface
+  (defun neotree-projectile-toggle ()
+    (interactive)
+    (let ((project-dir
+           (ignore-errors
+         ;;; Pick one: projectile or find-file-in-project
+             (projectile-project-root)
+             ))
+          (file-name (buffer-file-name))
+          (neo-smart-open t))
+      (if (and (fboundp 'neo-global--window-exists-p)
+               (neo-global--window-exists-p))
+          (neotree-hide)
+	(progn
+          (neotree-show)
+          (if project-dir
+              (neotree-dir project-dir))
+          (if file-name
+              (neotree-find file-name)))))))
+
+(use-package nyan-mode
+  :config
+  (nyan-mode)
+  (nyan-start-animation))
+
+(use-package projectile
+  :defer 5
+  :diminish
+  :bind* (("C-c TAB" . projectile-find-other-file)
+          ("C-c P" . (lambda () (interactive)
+                       (projectile-cleanup-known-projects)
+                       (projectile-discover-projects-in-search-path))))
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :config
+  (projectile-global-mode)
+
+  (defun my-projectile-invalidate-cache (&rest _args)
+    ;; We ignore the args to `magit-checkout'.
+    (projectile-invalidate-cache nil))
+
+  (eval-after-load 'magit-branch
+    '(progn
+       (advice-add 'magit-checkout
+                   :after #'my-projectile-invalidate-cache)
+       (advice-add 'magit-branch-and-checkout
+:after #'my-projectile-invalidate-cache))))
+
+(use-package paren
+  :ensure nil
+  :hook
+  (after-init . show-paren-mode)
+  :custom-face
+  (show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
+  :custom
+  (show-paren-style 'mixed)
+  (show-paren-when-point-inside-paren t)
+  (show-paren-when-point-in-periphery t))
+
+(use-package rainbow-delimiters
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
+
+(use-package volatile-highlights
+  :diminish
+  :hook
+  (after-init . volatile-highlights-mode)
+  :custom-face
+  (vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD")))))
 
 (use-package which-key
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
+
