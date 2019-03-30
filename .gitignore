@@ -1,24 +1,12 @@
-#
+amx-items
 auto-save-list/
-
-#
 ac-dict/
-
-#
 backup/
-
-#外部パッケージは管理外とする
 elpa/
-
-#
+straight/
 eshell/history
 eshell/lastdir
-
-#
 server/
-
-
-# etc
 ac-comphist.dat
 bookmarks
 tramp
@@ -27,6 +15,7 @@ recentf
 ensime
 emojis
 network-security.data
-
-# jedi
 .python-environments
+forge-database.sqlite
+recentf~
+transient/
