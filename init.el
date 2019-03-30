@@ -113,6 +113,12 @@
     (setq use-package-verbose nil
 	  use-package-expand-minimally t)))
 
+(defun other-window-or-split ()
+  (interactive)
+  (when (one-window-p)
+    (split-window-horizontally))
+  (other-window 1))
+
 ;;; Settings
 
 ;;;; Emacs で自動作成されるファイル(バックアップ、自動保存、ロック)の設定 ;;;;
@@ -208,7 +214,6 @@
 	  )))
 
 (bind-keys*
- ("C-t"   . other-window)
  ("C-\\"  . split-window-horizontally)
  ("C--"   . split-window-vertically) 
  ("C-S-t" . delete-window)
@@ -216,6 +221,16 @@
  ("C-M-p" . backward-page))
 
 ;;; Packages
+  (use-package ace-window
+    ;:functions hydra-frame-window/body
+    ;:bind
+					;("C-M-o" . hydra-frame-window/body)
+    :bind* ("C-t" . ace-window)
+    :custom
+    (aw-keys '(?j ?k ?l ?i ?o ?h ?y ?u ?p))
+    :custom-face
+    (aw-leading-char-face ((t (:height 4.0 :foreground "#f1fa8c")))))
+    
 (use-package amx)
 
 (use-package anzu
@@ -226,6 +241,11 @@
   :config
   (setq auto-save-buffers-enhanced-interval 1)
   (auto-save-buffers-enhanced t))
+
+(use-package avy
+  :bind* ("C-." . avy-goto-char-timer)
+  :config
+(avy-setup-default))
 
 (use-package beacon
   :custom
