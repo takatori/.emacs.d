@@ -53,7 +53,6 @@
 
 
 ;;; Environment
-
 (eval-and-compile
   (defconst emacs-environment (getenv "NIX_MYENV_NAME"))
 
@@ -842,6 +841,33 @@
               ("C-." . swiper-avy)
               ("M-c" . swiper-mc)))
 
+(use-package tide
+  :init
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+	 (before-save . tide-format-before-save)))
+
+(use-package typescript-mode
+  :mode (("\\.ts?\\'" . typescript-mode))
+  :init
+  (add-hook 'typescript-mode-hook #'lsp)  
+  :config
+  (setq typescript-indent-level 2))
+
+;; TODO
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  ;; company is an optional dependency. You have to
+  ;; install it separately via package-install
+  ;; `M-x package-install [ret] company`
+  (company-mode +1))
+
 
 (use-package vlf
   :disabled t
@@ -855,6 +881,26 @@
   (after-init . volatile-highlights-mode)
   :custom-face
   (vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD")))))
+
+
+(use-package web-mode
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode)
+         ("\\.jsx\\'" . web-mode))
+  :config
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-block-padding 2
+        web-mode-comment-style 2
+
+        web-mode-enable-css-colorization t
+        web-mode-enable-auto-pairing t
+        web-mode-enable-comment-keywords t
+        web-mode-enable-current-element-highlight t
+        )
+  ;; enable typescript-tslint checker
+  (flycheck-add-mode 'typescript-tslint 'web-mode))
 
 (use-package which-key
   :diminish which-key-mode
