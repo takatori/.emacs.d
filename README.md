@@ -1,20 +1,7 @@
-Takatori's Emacs
+dot-emacs
 ====
 
-Overview
-emacs設定ファイル
 
 ## Requirement
-emacs24.3以降
-
-## Usage
-* emacsをダウンロード
-* 好きな場所にgit clone
-* 環境変数HOMEを設定
-* emacs上で確認
-  * M-x getenv
-  * HOMEと入力
-
-
-
+- emacs >= 26.1
 
