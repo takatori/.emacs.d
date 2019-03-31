@@ -212,6 +212,7 @@
 	  )))
 
 (bind-keys*
+ ("C-l"   . ivy-kill-ring-save)
  ("C-\\"  . split-window-horizontally)
  ("C--"   . split-window-vertically) 
  ("C-S-t" . delete-window)
@@ -507,7 +508,7 @@
   (use-package lsp-ui
     :custom
     ;; lsp-ui-doc
-    (lsp-ui-doc-enable t)
+    (lsp-ui-doc-enable nil)
     (lsp-ui-doc-header t)
     (lsp-ui-doc-include-signature t)
     (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
@@ -638,8 +639,8 @@
 
 (use-package company-box
   :hook (company-mode . company-box-mode)
-  :custom
-  (company-box-icons-lsp
+  :config
+  (setq company-box-icons--lsp
 	'((1 . fa_text_height) ;; Text
           (2 . (fa_tags :face font-lock-function-name-face)) ;; Method
           (3 . (fa_tag :face font-lock-function-name-face)) ;; Function
@@ -836,6 +837,14 @@
   (show-paren-style 'mixed)
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
+
+(use-package rainbow-mode
+  :hook (css-mode html-mode emacs-lisp-mode)
+  :config
+  (setq rainbow-html-colors t)
+  (setq rainbow-x-colors t)
+  (setq rainbow-latex-colors t)
+  (setq rainbow-ansi-colors t))
 
 (use-package rainbow-delimiters
   :hook
