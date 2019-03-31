@@ -209,7 +209,6 @@
             (define-prefix-command (cdr entry))
             (bind-key (car entry) (cdr entry)))
         '(("C-l" . ivy-kill-ring-save)
-	  ("C-;" . comment-line)
 	  )))
 
 (bind-keys*
