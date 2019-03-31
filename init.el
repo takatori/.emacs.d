@@ -359,6 +359,10 @@
  '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker)))
 
 
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
 (use-package expand-region
   :bind ("C-," . er/expand-region))
 
@@ -374,6 +378,16 @@
     (git-gutter:deleted  ((t (:background "#ff79c6"))))
     :config
     (global-git-gutter-mode +1))
+
+(use-package go-mode
+  :commands go-mode
+  :mode (("\\.go?\\'" . go-mode))
+  :defer t
+  :init
+  (add-hook 'go-mode-hook #'lsp)
+  :config
+   ;; 保存前に lsp-format-buffer
+  (add-hook 'before-save-hook 'lsp-format-buffer))
 
 (use-package hide-mode-line
   :hook
@@ -474,10 +488,8 @@
   (lsp-auto-guess-root t)
   (lsp-document-sync-method 'incremental) ;; always send incremental document
   (lsp-response-timeout 5)
-  (lsp-prefer-flymake 'flymake)
+  (lsp-prefer-flymake nil)
   (lsp-enable-completion-at-point nil)
-  :hook
-  (go-mode . lsp)
   :bind
   (:map lsp-mode-map
   ("C-c r"   . lsp-rename))
@@ -496,7 +508,7 @@
     (lsp-ui-doc-use-childframe t)
     (lsp-ui-doc-use-webkit t)
     ;; lsp-ui-flycheck
-    (lsp-ui-flycheck-enable nil)
+    (lsp-ui-flycheck-enable t)
     ;; lsp-ui-sideline
     (lsp-ui-sideline-enable nil)
     (lsp-ui-sideline-ignore-duplicate t)
@@ -543,9 +555,118 @@
   :hook ((c-mode c++-mode objc-mode) .
          (lambda () (require 'ccls) (lsp))))
 
+(use-package company
+  :defer 5
+  :diminish
+  :bind (:map company-active-map
+	      ("C-n" . company-select-next)
+	      ("C-p" . company-select-previous))  
+  :commands (company-mode company-indent-or-complete-common)
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook
+                  c-mode-common-hook))
+    (add-hook hook
+              #'(lambda ()
+                  (local-set-key (kbd "<tab>")
+                                 #'company-indent-or-complete-common)))) ;; TODO: global
+  :config
+  ;; From https://github.com/company-mode/company-mode/issues/87
+  ;; See also https://github.com/company-mode/company-mode/issues/123
+  (defadvice company-pseudo-tooltip-unless-just-one-frontend
+      (around only-show-tooltip-when-invoked activate)
+    (when (company-explicit-action-p)
+      ad-do-it))
+
+  ;; See http://oremacs.com/2017/12/27/company-numbers/
+  (defun ora-company-number ()
+    "Forward to `company-complete-number'.
+  Unless the number is potentially part of the candidate.
+  In that case, insert the number."
+    (interactive)
+    (let* ((k (this-command-keys))
+           (re (concat "^" company-prefix k)))
+      (if (cl-find-if (lambda (s) (string-match re s))
+                      company-candidates)
+          (self-insert-command 1)
+        (company-complete-number (string-to-number k)))))
+
+  (let ((map company-active-map))
+    (mapc
+     (lambda (x)
+       (define-key map (format "%d" x) 'ora-company-number))
+     (number-sequence 0 9))
+    (define-key map " " (lambda ()
+                          (interactive)
+                          (company-abort)
+                          (self-insert-command 1))))
+
+  (defun check-expansion ()
+    (save-excursion
+      (if (outline-on-heading-p t)
+          nil
+        (if (looking-at "\\_>") t
+          (backward-char 1)
+          (if (looking-at "\\.") t
+            (backward-char 1)
+            (if (looking-at "->") t nil))))))
+
+  (define-key company-mode-map [tab]
+    '(menu-item "maybe-company-expand" nil
+                :filter (lambda (&optional _)
+                          (when (check-expansion)
+                            #'company-complete-common))))
+
+  (eval-after-load "coq"
+    '(progn
+       (defun company-mode/backend-with-yas (backend)
+         (if (and (listp backend) (member 'company-yasnippet backend))
+             backend
+           (append (if (consp backend) backend (list backend))
+                   '(:with company-yasnippet))))
+       (setq company-backends
+             (mapcar #'company-mode/backend-with-yas company-backends))))
+
+  (global-company-mode 1))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode)
+  :custom
+  (company-box-icons-lsp
+	'((1 . fa_text_height) ;; Text
+          (2 . (fa_tags :face font-lock-function-name-face)) ;; Method
+          (3 . (fa_tag :face font-lock-function-name-face)) ;; Function
+          (4 . (fa_tag :face font-lock-function-name-face)) ;; Constructor
+          (5 . (fa_cog :foreground "#FF9800")) ;; Field
+          (6 . (fa_cog :foreground "#FF9800")) ;; Variable
+          (7 . (fa_cube :foreground "#7C4DFF")) ;; Class
+          (8 . (fa_cube :foreground "#7C4DFF")) ;; Interface
+          (9 . (fa_cube :foreground "#7C4DFF")) ;; Module
+          (10 . (fa_cog :foreground "#FF9800")) ;; Property
+          (11 . md_settings_system_daydream) ;; Unit
+          (12 . (fa_cog :foreground "#FF9800")) ;; Value
+          (13 . (md_storage :face font-lock-type-face)) ;; Enum
+          (14 . (md_closed_caption :foreground "#009688")) ;; Keyword
+          (15 . md_closed_caption) ;; Snippet
+          (16 . (md_color_lens :face font-lock-doc-face)) ;; Color
+          (17 . fa_file_text_o) ;; File
+          (18 . md_refresh) ;; Reference
+          (19 . fa_folder_open) ;; Folder
+          (20 . (md_closed_caption :foreground "#009688")) ;; EnumMember
+          (21 . (fa_square :face font-lock-constant-face)) ;; Constant
+          (22 . (fa_cube :face font-lock-type-face)) ;; Struct
+          (23 . fa_calendar) ;; Event
+          (24 . fa_square_o) ;; Operator
+          (25 . fa_arrows)) ;; TypeParameter
+	))
+
+(use-package company-quickhelp
+  :after company
+  :bind (:map company-active-map
+	      ("C-c ?" . company-quickhelp-manual-begin)))
+
 (use-package magit
-  :bind (("C-x g" . magit-status)
-         ("C-x G" . magit-status-with-prefix))
+  :bind (("C-x m" . magit-status)
+         ("C-x M" . magit-status-with-prefix))
   :bind (:map magit-mode-map
               ("U" . magit-unstage-all)
               ("M-h") ("M-s") ("M-m") ("M-w"))
@@ -590,6 +711,53 @@
   :config
   (add-hook 'magit-status-mode-hook #'(lambda () (magit-monitor t)))
   (define-key magit-mode-map "G" #'endless/visit-pull-request-url))
+
+(use-package flycheck
+  :commands (flycheck-mode
+             flycheck-next-error
+             flycheck-previous-error)
+  :init
+  (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
+                   (haskell-mode-hook    . haskell-mode-map)
+                   (js2-mode-hook        . js2-mode-map)
+                   (c-mode-common-hook   . c-mode-base-map)))
+    (add-hook (car where)
+              `(lambda ()
+                 (bind-key "M-n" #'flycheck-next-error ,(cdr where))
+                 (bind-key "M-p" #'flycheck-previous-error ,(cdr where)))))
+  :config
+  (defalias 'show-error-at-point-soon
+    'flycheck-show-error-at-point)
+
+  (defun magnars/adjust-flycheck-automatic-syntax-eagerness ()
+    "Adjust how often we check for errors based on if there are any.
+  This lets us fix any errors as quickly as possible, but in a
+  clean buffer we're an order of magnitude laxer about checking."
+    (setq flycheck-idle-change-delay
+          (if flycheck-current-errors 0.3 3.0)))
+
+  ;; Each buffer gets its own idle-change-delay because of the
+  ;; buffer-sensitive adjustment above.
+  (make-variable-buffer-local 'flycheck-idle-change-delay)
+
+  (add-hook 'flycheck-after-syntax-check-hook
+            'magnars/adjust-flycheck-automatic-syntax-eagerness)
+
+  ;; Remove newline checks, since they would trigger an immediate check
+  ;; when we want the idle-change-delay to be in effect while editing.
+  (setq-default flycheck-check-syntax-automatically '(save
+                                                      idle-change
+                                                      mode-enabled))
+
+  (defun flycheck-handle-idle-change ()
+    "Handle an expired idle time since the last change.
+  This is an overwritten version of the original
+  flycheck-handle-idle-change, which removes the forced deferred.
+  Timers should only trigger inbetween commands in a single
+  threaded system and the forced deferred makes errors never show
+  up before you execute another command."
+    (flycheck-clear-idle-change-timer)
+    (flycheck-buffer-automatically 'idle-change)))
 
 (use-package forge
   :after magit)
