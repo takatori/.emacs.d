@@ -223,10 +223,11 @@
   (use-package ace-window
     ;:functions hydra-frame-window/body
     ;:bind
-					;("C-M-o" . hydra-frame-window/body)
+    ;("C-M-o" . hydra-frame-window/body)
     :bind* ("C-t" . ace-window)
     :custom
     (aw-keys '(?j ?k ?l ?i ?o ?h ?y ?u ?p))
+    (aw-dispatch-when-more-than 3)
     :custom-face
     (aw-leading-char-face ((t (:height 4.0 :foreground "#f1fa8c")))))
     
@@ -266,7 +267,7 @@
                    "\\'\\)"))
   (counsel-yank-pop-separator "\n-------\n")
   :bind (("C-*"     . counsel-org-agenda-headlines)
-         ("C-x C-f" . counsel-find-file)
+         ("C-c C-f" . counsel-find-file)
          ("C-c e l" . counsel-find-library)
          ("C-c e q" . counsel-set-variable)
          ;;("C-h e l" . counsel-find-library)
@@ -320,16 +321,26 @@
   :config
   (counsel-projectile-mode 1))
 
+
+;; save to straight/repos/emacs-dashboard/banners/4.txt
+;;
+;; ███████╗███╗   ███╗ █████╗  ██████╗███████╗
+;; ██╔════╝████╗ ████║██╔══██╗██╔════╝██╔════╝
+;; █████╗  ██╔████╔██║███████║██║     ███████╗
+;; ██╔══╝  ██║╚██╔╝██║██╔══██║██║     ╚════██║
+;; ███████╗██║ ╚═╝ ██║██║  ██║╚██████╗███████║
+;; ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝╚══════╝
+;;
 (use-package dashboard
   :diminish
   (dashboard-mode)
   :custom
-  (dashboard-startup-banner 2)
+  (dashboard-startup-banner 4)
   (dashboard-items '((recents . 15)
 		     (projects . 5)
 		     (bookmarks . 5)))
-  :hook
-  (after-init . dashboard-setup-startup-hook))
+  :config
+  (dashboard-setup-startup-hook))
 
 (use-package doom-themes
   :custom
@@ -407,8 +418,7 @@
   :demand t
 
   :bind (("C-x b"   . ivy-switch-buffer)
-         ("C-x B"   . ivy-switch-buffer-other-window)
-	 ("C-x C-r" . ivy-recentf)
+         ("C-x C-b"   . ivy-switch-buffer-other-window)
          ("M-H"   . ivy-resume))
 
   :bind (:map ivy-minibuffer-map
@@ -501,7 +511,7 @@
     (lsp-ui-doc-enable t)
     (lsp-ui-doc-header t)
     (lsp-ui-doc-include-signature t)
-    (lsp-ui-doc-position 'top) ;; top, bottom, or at-point
+    (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
     (lsp-ui-doc-max-width 150)
     (lsp-ui-doc-max-height 30)
     (lsp-ui-doc-use-childframe t)
@@ -524,7 +534,7 @@
     (lsp-ui-peek-list-width 50)
     (lsp-ui-peek-fontify 'on-demand) ;; never, on-demand, or always
     :preface
-    (defun ladicle/toggle-lsp-ui-doc ()
+    (defun toggle-lsp-ui-doc ()
       (interactive)
       (if lsp-ui-doc-mode
         (progn
@@ -538,7 +548,7 @@
     ("C-c i"   . lsp-ui-peek-find-implementation)
     ("C-c m"   . lsp-ui-imenu)
     ("C-c s"   . lsp-ui-sideline-mode)
-    ("C-c d"   . ladicle/toggle-lsp-ui-doc))
+    ("C-c d"   . toggle-lsp-ui-doc))
     :hook
     (lsp-mode . lsp-ui-mode))
   ;; Lsp completion
