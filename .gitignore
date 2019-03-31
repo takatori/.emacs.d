@@ -19,3 +19,5 @@ network-security.data
 forge-database.sqlite
 recentf~
 transient/
+.lsp-session-v1
+url/
