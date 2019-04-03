@@ -18,7 +18,6 @@
              (garbage-collect)) t)
 
 ;;; Functions
-
 (eval-and-compile
   
   (defun emacs-path (path)
@@ -119,7 +118,6 @@
   (other-window 1))
 
 ;;; Settings
-
 ;;;; Emacs で自動作成されるファイル(バックアップ、自動保存、ロック)の設定 ;;;;
 ;; [参考](http://yohshiy.blog.fc2.com/blog-entry-319.html)
 ;; バックアップファイル(編集前のファイル)
@@ -200,6 +198,11 @@
 ;; meta-keyをcommadに割り当て
 (when (eq system-type 'darwin)
   (setq ns-command-modifier (quote meta)))
+
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
+(setq ns-use-proxy-icon nil)
+(setq frame-title-format nil)
 
 
 ;;; Keymaps
@@ -342,6 +345,7 @@
   :config
   (dashboard-setup-startup-hook))
 
+;; M-x all-the-icons-install-fonts
 (use-package doom-themes
   :custom
   (doom-themes-enable-italic t)
@@ -924,3 +928,5 @@
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
 
+(use-package yaml-mode
+  :mode (("\\.ya?ml\\'" . yaml-mode)))
