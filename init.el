@@ -395,7 +395,7 @@
 
 (use-package go-mode
   :commands go-mode
-  :mode (("\\.go?\\'" . go-mode))
+  :mode (("\\.go\\'" . go-mode))
   :defer t
   :init
   (add-hook 'go-mode-hook #'lsp)
@@ -494,8 +494,8 @@
 (use-package lsp-mode
   :custom
   ;; debug
-  (lsp-print-io nil)
-  (lsp-trace nil)
+  (lsp-print-io t)
+  (lsp-trace t)
   (lsp-print-performance nil)
   ;; general
   (lsp-auto-guess-root t)
@@ -871,7 +871,7 @@
 	 (before-save . tide-format-before-save)))
 
 (use-package typescript-mode
-  :mode (("\\.ts?\\'" . typescript-mode))
+  :mode (("\\.ts\\'" . typescript-mode))
   :init
   (add-hook 'typescript-mode-hook #'lsp)  
   :config
