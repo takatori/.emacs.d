@@ -376,8 +376,12 @@
 
 
 (use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
+   :if (memq window-system '(mac ns))                                                                                  
+   :init                                                                                                               
+   (progn                                                                                                              
+     (exec-path-from-shell-initialize)                                                                                 
+     (exec-path-from-shell-copy-env "GOPATH")))
+
 
 (use-package expand-region
   :bind ("C-," . er/expand-region))
@@ -852,6 +856,11 @@
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)
 	 (before-save . tide-format-before-save)))
+
+(use-package review-mode
+  :commands review-mode
+  :mode (("\\.re$\\'" . review-mode))
+  :defer t)
 
 (use-package typescript-mode
   :mode (("\\.ts\\'" . typescript-mode))
