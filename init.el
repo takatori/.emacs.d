@@ -345,6 +345,11 @@
   :config
   (dashboard-setup-startup-hook))
 
+
+(use-package dockerfile-mode
+  :mode ("Dockerfile\\'" . dockerfile-mode))
+
+
 ;; M-x all-the-icons-install-fonts
 (use-package doom-themes
   :custom
@@ -380,6 +385,7 @@
 (use-package expand-region
   :bind ("C-," . er/expand-region))
 
+(use-package apache-mode)
 
 (use-package git-gutter
     :custom
@@ -402,6 +408,9 @@
   :config
    ;; 保存前に lsp-format-buffer
   (add-hook 'before-save-hook 'lsp-format-buffer))
+
+(use-package hcl-mode
+  :mode ("\\.tf\\'" . hcl-mode))
 
 (use-package hide-mode-line
   :hook
