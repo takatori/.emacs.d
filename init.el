@@ -233,7 +233,9 @@
     (aw-dispatch-when-more-than 3)
     :custom-face
     (aw-leading-char-face ((t (:height 4.0 :foreground "#f1fa8c")))))
-    
+
+(use-package all-the-icons :defer t)
+
 (use-package amx)
 
 (use-package anzu
@@ -379,8 +381,12 @@
 
 
 (use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
+   :if (memq window-system '(mac ns))                                                                                  
+   :init                                                                                                               
+   (progn                                                                                                              
+     (exec-path-from-shell-initialize)                                                                                 
+     (exec-path-from-shell-copy-env "GOPATH")))
+
 
 (use-package expand-region
   :bind ("C-," . er/expand-region))
@@ -401,7 +407,7 @@
 
 (use-package go-mode
   :commands go-mode
-  :mode (("\\.go?\\'" . go-mode))
+  :mode (("\\.go\\'" . go-mode))
   :defer t
   :init
   (add-hook 'go-mode-hook #'lsp)
@@ -503,8 +509,8 @@
 (use-package lsp-mode
   :custom
   ;; debug
-  (lsp-print-io nil)
-  (lsp-trace nil)
+  (lsp-print-io t)
+  (lsp-trace t)
   (lsp-print-performance nil)
   ;; general
   (lsp-auto-guess-root t)
@@ -578,113 +584,94 @@
          (lambda () (require 'ccls) (lsp))))
 
 (use-package company
-  :defer 5
-  :diminish
-  :bind (:map company-active-map
-	      ("C-n" . company-select-next)
-	      ("C-p" . company-select-previous))  
-  :commands (company-mode company-indent-or-complete-common)
-  :init
-  (dolist (hook '(emacs-lisp-mode-hook
-                  c-mode-common-hook))
-    (add-hook hook
-              #'(lambda ()
-                  (local-set-key (kbd "<tab>")
-                                 #'company-indent-or-complete-common)))) ;; TODO: global
+  :diminish company-mode
+  :defines
+  (company-dabbrev-ignore-case company-dabbrev-downcase)
+  :bind
+  (:map company-active-map
+   ("C-n" . company-select-next)
+   ("C-p" . company-select-previous)
+   ("<tab>" . company-complete-common-or-cycle)
+   :map company-search-map
+   ("C-p" . company-select-previous)
+   ("C-n" . company-select-next))
+  :custom
+  (company-idle-delay 0)
+  (company-echo-delay 0)
+  (company-minimum-prefix-length 1)      
+  :hook
+  (after-init . global-company-mode)
+  ((go-mode typescript-mode c++-mode) . (lambda () (set (make-local-variable 'company-backends)
+			    '((company-yasnippet
+			       company-lsp
+			       company-files
+			       company-dabbrev-code
+			       ;; company-ispell
+			       )))))
   :config
-  ;; From https://github.com/company-mode/company-mode/issues/87
-  ;; See also https://github.com/company-mode/company-mode/issues/123
-  (defadvice company-pseudo-tooltip-unless-just-one-frontend
-      (around only-show-tooltip-when-invoked activate)
-    (when (company-explicit-action-p)
-      ad-do-it))
+  (use-package company-posframe
+    :hook (company-mode . company-posframe-mode))  
+  ;; Show pretty icons
+  ;; Show pretty icons
+  (use-package company-box
+    :diminish
+    :hook (company-mode . company-box-mode)
+    :init (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+    :config
+    (setq company-box-backends-colors nil)
+    (setq company-box-show-single-candidate t)
+    (setq company-box-max-candidates 50)
 
-  ;; See http://oremacs.com/2017/12/27/company-numbers/
-  (defun ora-company-number ()
-    "Forward to `company-complete-number'.
-  Unless the number is potentially part of the candidate.
-  In that case, insert the number."
-    (interactive)
-    (let* ((k (this-command-keys))
-           (re (concat "^" company-prefix k)))
-      (if (cl-find-if (lambda (s) (string-match re s))
-                      company-candidates)
-          (self-insert-command 1)
-        (company-complete-number (string-to-number k)))))
+    (defun company-box-icons--elisp (candidate)
+      (when (derived-mode-p 'emacs-lisp-mode)
+        (let ((sym (intern candidate)))
+          (cond ((fboundp sym) 'Function)
+                ((featurep sym) 'Module)
+                ((facep sym) 'Color)
+                ((boundp sym) 'Variable)
+                ((symbolp sym) 'Text)
+                (t . nil)))))
 
-  (let ((map company-active-map))
-    (mapc
-     (lambda (x)
-       (define-key map (format "%d" x) 'ora-company-number))
-     (number-sequence 0 9))
-    (define-key map " " (lambda ()
-                          (interactive)
-                          (company-abort)
-                          (self-insert-command 1))))
-
-  (defun check-expansion ()
-    (save-excursion
-      (if (outline-on-heading-p t)
-          nil
-        (if (looking-at "\\_>") t
-          (backward-char 1)
-          (if (looking-at "\\.") t
-            (backward-char 1)
-            (if (looking-at "->") t nil))))))
-
-  (define-key company-mode-map [tab]
-    '(menu-item "maybe-company-expand" nil
-                :filter (lambda (&optional _)
-                          (when (check-expansion)
-                            #'company-complete-common))))
-
-  (eval-after-load "coq"
-    '(progn
-       (defun company-mode/backend-with-yas (backend)
-         (if (and (listp backend) (member 'company-yasnippet backend))
-             backend
-           (append (if (consp backend) backend (list backend))
-                   '(:with company-yasnippet))))
-       (setq company-backends
-             (mapcar #'company-mode/backend-with-yas company-backends))))
-
-  (global-company-mode 1))
-
-(use-package company-box
-  :hook (company-mode . company-box-mode)
-  :config
-  (setq company-box-icons--lsp
-	'((1 . fa_text_height) ;; Text
-          (2 . (fa_tags :face font-lock-function-name-face)) ;; Method
-          (3 . (fa_tag :face font-lock-function-name-face)) ;; Function
-          (4 . (fa_tag :face font-lock-function-name-face)) ;; Constructor
-          (5 . (fa_cog :foreground "#FF9800")) ;; Field
-          (6 . (fa_cog :foreground "#FF9800")) ;; Variable
-          (7 . (fa_cube :foreground "#7C4DFF")) ;; Class
-          (8 . (fa_cube :foreground "#7C4DFF")) ;; Interface
-          (9 . (fa_cube :foreground "#7C4DFF")) ;; Module
-          (10 . (fa_cog :foreground "#FF9800")) ;; Property
-          (11 . md_settings_system_daydream) ;; Unit
-          (12 . (fa_cog :foreground "#FF9800")) ;; Value
-          (13 . (md_storage :face font-lock-type-face)) ;; Enum
-          (14 . (md_closed_caption :foreground "#009688")) ;; Keyword
-          (15 . md_closed_caption) ;; Snippet
-          (16 . (md_color_lens :face font-lock-doc-face)) ;; Color
-          (17 . fa_file_text_o) ;; File
-          (18 . md_refresh) ;; Reference
-          (19 . fa_folder_open) ;; Folder
-          (20 . (md_closed_caption :foreground "#009688")) ;; EnumMember
-          (21 . (fa_square :face font-lock-constant-face)) ;; Constant
-          (22 . (fa_cube :face font-lock-type-face)) ;; Struct
-          (23 . fa_calendar) ;; Event
-          (24 . fa_square_o) ;; Operator
-          (25 . fa_arrows)) ;; TypeParameter
-	))
-
-(use-package company-quickhelp
-  :after company
-  :bind (:map company-active-map
-	      ("C-c ?" . company-quickhelp-manual-begin)))
+    (with-eval-after-load 'all-the-icons
+      (declare-function all-the-icons-faicon 'all-the-icons)
+      (declare-function all-the-icons-fileicon 'all-the-icons)
+      (declare-function all-the-icons-material 'all-the-icons)
+      (declare-function all-the-icons-octicon 'all-the-icons)
+      (setq company-box-icons-all-the-icons
+            `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.7 :v-adjust -0.15))
+              (Text . ,(all-the-icons-faicon "book" :height 0.68 :v-adjust -0.15))
+              (Method . ,(all-the-icons-faicon "cube" :height 0.7 :v-adjust -0.05 :face 'font-lock-constant-face))
+              (Function . ,(all-the-icons-faicon "cube" :height 0.7 :v-adjust -0.05 :face 'font-lock-constant-face))
+              (Constructor . ,(all-the-icons-faicon "cube" :height 0.7 :v-adjust -0.05 :face 'font-lock-constant-face))
+              (Field . ,(all-the-icons-faicon "tags" :height 0.65 :v-adjust -0.15 :face 'font-lock-warning-face))
+              (Variable . ,(all-the-icons-faicon "tag" :height 0.7 :v-adjust -0.05 :face 'font-lock-warning-face))
+              (Class . ,(all-the-icons-faicon "clone" :height 0.65 :v-adjust 0.01 :face 'font-lock-constant-face))
+              (Interface . ,(all-the-icons-faicon "clone" :height 0.65 :v-adjust 0.01))
+              (Module . ,(all-the-icons-octicon "package" :height 0.7 :v-adjust -0.15))
+              (Property . ,(all-the-icons-octicon "package" :height 0.7 :v-adjust -0.05 :face 'font-lock-warning-face)) ;; Golang module
+              (Unit . ,(all-the-icons-material "settings_system_daydream" :height 0.7 :v-adjust -0.15))
+              (Value . ,(all-the-icons-material "format_align_right" :height 0.7 :v-adjust -0.15 :face 'font-lock-constant-face))
+              (Enum . ,(all-the-icons-material "storage" :height 0.7 :v-adjust -0.15 :face 'all-the-icons-orange))
+              (Keyword . ,(all-the-icons-material "filter_center_focus" :height 0.7 :v-adjust -0.15))
+              (Snippet . ,(all-the-icons-faicon "code" :height 0.7 :v-adjust 0.02 :face 'font-lock-variable-name-face))
+              (Color . ,(all-the-icons-material "palette" :height 0.7 :v-adjust -0.15))
+              (File . ,(all-the-icons-faicon "file-o" :height 0.7 :v-adjust -0.05))
+              (Reference . ,(all-the-icons-material "collections_bookmark" :height 0.7 :v-adjust -0.15))
+              (Folder . ,(all-the-icons-octicon "file-directory" :height 0.7 :v-adjust -0.05))
+              (EnumMember . ,(all-the-icons-material "format_align_right" :height 0.7 :v-adjust -0.15 :face 'all-the-icons-blueb))
+              (Constant . ,(all-the-icons-faicon "tag" :height 0.7 :v-adjust -0.05))
+              (Struct . ,(all-the-icons-faicon "clone" :height 0.65 :v-adjust 0.01 :face 'font-lock-constant-face))
+              (Event . ,(all-the-icons-faicon "bolt" :height 0.7 :v-adjust -0.05 :face 'all-the-icons-orange))
+              (Operator . ,(all-the-icons-fileicon "typedoc" :height 0.65 :v-adjust 0.05))
+              (TypeParameter . ,(all-the-icons-faicon "hashtag" :height 0.65 :v-adjust 0.07 :face 'font-lock-const-face))
+              (Template . ,(all-the-icons-faicon "code" :height 0.7 :v-adjust 0.02 :face 'font-lock-variable-name-face))))))
+    ;; Show quick tooltip
+    (use-package company-quickhelp
+      :defines company-quickhelp-delay
+      :bind (:map company-active-map
+		  ("M-h" . company-quickhelp-manual-begin))
+      :hook (global-company-mode . company-quickhelp-mode)
+      :custom (company-quickhelp-delay 0.8)))
 
 (use-package magit
   :bind (("C-x m" . magit-status)
@@ -879,8 +866,13 @@
          (typescript-mode . tide-hl-identifier-mode)
 	 (before-save . tide-format-before-save)))
 
+(use-package review-mode
+  :commands review-mode
+  :mode (("\\.re$\\'" . review-mode))
+  :defer t)
+
 (use-package typescript-mode
-  :mode (("\\.ts?\\'" . typescript-mode))
+  :mode (("\\.ts\\'" . typescript-mode))
   :init
   (add-hook 'typescript-mode-hook #'lsp)  
   :config
